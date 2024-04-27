@@ -14,7 +14,7 @@ namespace QuotaRollover
     [BepInPlugin("fosterchild1.QuotraRolloverFix", "Quota Rollover Fix", "1.0.0")]
     public class QuotaRolloverBase : BaseUnityPlugin
     {
-        private readonly Harmony harmony = new Harmony("Boxofbiscuits97.QuotraRollover");
+        private readonly Harmony harmony = new Harmony("fosterchild1.QuotraRolloverFix");
 
         private static QuotaRolloverBase Instance;
 
@@ -42,14 +42,11 @@ namespace QuotaRollover.Patches
         [HarmonyAfter(new string[] { })]
         private static bool GetQuotaFulfilledHost(ref int ___quotaFulfilled, ref int ___profitQuota, out int __state)
         {
-            QuotaRolloverBase.logger.LogInfo((object)$"days: {TimeOfDay.Instance.daysUntilDeadline} time: {TimeOfDay.Instance.timeUntilDeadline} ID: {StartOfRound.Instance.currentLevelID}");
             if (TimeOfDay.Instance.daysUntilDeadline < 1)
             {
                 __state = ___quotaFulfilled - ___profitQuota;
-                QuotaRolloverBase.logger.LogInfo((object)$"Host Got New Quota at: {__state} ful: {___quotaFulfilled}");
                 return true;
             }
-            QuotaRolloverBase.logger.LogInfo((object)"returned FALSE");
             __state = ___quotaFulfilled;
             return false;
         }
@@ -60,7 +57,6 @@ namespace QuotaRollover.Patches
         private static void SetQuotaFulfilledHost(ref int ___quotaFulfilled, int __state)
         {
             ___quotaFulfilled = __state;
-            QuotaRolloverBase.logger.LogInfo((object)$"Host Set New Quota at: {__state}");
         }
 
         [HarmonyPatch("SyncNewProfitQuotaClientRpc")]
@@ -68,7 +64,7 @@ namespace QuotaRollover.Patches
         private static void GetNewQuotaFulfilledClient(ref int ___quotaFulfilled, ref int ___profitQuota, out int __state)
         {
             __state = ___quotaFulfilled - ___profitQuota;
-            QuotaRolloverBase.logger.LogInfo((object)$"Client Got New Quota at: {__state}");
+
         }
 
         [HarmonyPatch("SyncNewProfitQuotaClientRpc")]
@@ -78,7 +74,6 @@ namespace QuotaRollover.Patches
             if (___quotaFulfilled == 0)
             {
                 ___quotaFulfilled = __state;
-                QuotaRolloverBase.logger.LogInfo((object)$"Client Set New Quota at: {__state}");
             }
         }
     }
