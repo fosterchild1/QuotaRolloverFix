@@ -42,7 +42,7 @@ namespace QuotaRollover.Patches
         [HarmonyAfter(new string[] { })]
         private static bool GetQuotaFulfilledHost(ref int ___quotaFulfilled, ref int ___profitQuota, out int __state)
         {
-            if (TimeOfDay.Instance.daysUntilDeadline < 1)
+            if (TimeOfDay.Instance.daysUntilDeadline <= 0f)
             {
                 __state = ___quotaFulfilled - ___profitQuota;
                 return true;
